@@ -4,7 +4,7 @@ import Comments from "../components/Comments";
 class Story extends Component {
 	state = {
 		story: null,
-		comments: null,
+		comments: [],
 	};
 
 	componentDidMount() {
@@ -13,14 +13,27 @@ class Story extends Component {
 			.then((res) => res.json())
 			.then((story) => {
 				this.setState({ story: story });
+				const comments = story.kids;
+				comments.forEach((commentId) => {
+					fetch(`https://hacker-news.firebaseio.com/v0/item/${commentId}.json`)
+						.then((res) => res.json())
+
+						.then((comment) => {
+							const comments = this.state.comments;
+							comments.push(comment);
+							this.setState({ comments: comments });
+						});
+				});
 			});
 	}
 	render() {
+		const comments = this.state.comments;
 		const story = this.state.story ? (
 			<div>
-				<h2>{this.state.story.title}</h2>
+				<a href={this.state.story.url}>
+					<h3>{this.state.story.title}</h3>
+				</a>
 				<p>by: {this.state.story.by}</p>
-				<Comments />
 			</div>
 		) : (
 			<div>
@@ -28,7 +41,12 @@ class Story extends Component {
 			</div>
 		);
 
-		return <div>{story}</div>;
+		return (
+			<div>
+				<div>{story}</div>
+				<Comments comments={comments} />
+			</div>
+		);
 	}
 }
 
