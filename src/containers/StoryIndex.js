@@ -2,33 +2,24 @@ import React, { Component } from "react";
 
 class StoryIndex extends Component {
 	state = {
-		topstories: [],
+		stories: [],
 	};
 
 	componentDidMount() {
-		const topStoriesIdsUrl =
-			"https://hacker-news.firebaseio.com/v0/topstories.json";
-
-		let storyIds = [];
-
-		const promise = fetch(topStoriesIdsUrl)
+		fetch("https://hacker-news.firebaseio.com/v0/topstories.json")
 			.then((res) => res.json())
-			.then((ids) => ids.slice(0, 15))
-			.then((ids) => {
-				storyIds.push(ids);
+			.then((data) => {
+				const storyIds = data.slice(0, 15);
+				const promises = storyIds.map((id) => {
+					return fetch(
+						`https://hacker-news.firebaseio.com/v0/item/${id}.json`
+					).then((res) => res.json());
+				});
+
+				Promise.all(promises).then((results) => {
+					this.setState({ stories: results });
+				});
 			});
-
-		console.log(storyIds);
-
-		Promise.all(promise).then((results) => {
-			console.log(promise);
-			// results.forEach((storyid) => {
-			// 	console.log(storyid);
-			// 	fetch(`https://hacker-news.firebaseio.com/v0/item/${storyid}.json`)
-			// 		.then((res) => res.json())
-			// 		.then((topstories) => this.setState({ topstories: topstories }));
-			// });
-		});
 	}
 
 	render() {
