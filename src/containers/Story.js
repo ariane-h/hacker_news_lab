@@ -13,17 +13,22 @@ class Story extends Component {
 			.then((res) => res.json())
 			.then((story) => {
 				this.setState({ story: story });
-				const comments = story.kids;
-				comments.forEach((commentId) => {
-					fetch(`https://hacker-news.firebaseio.com/v0/item/${commentId}.json`)
-						.then((res) => res.json())
+				if (story.hasOwnProperty("kids")) {
+					const comments = story.kids;
 
-						.then((comment) => {
-							const comments = this.state.comments;
-							comments.push(comment);
-							this.setState({ comments: comments });
-						});
-				});
+					comments.forEach((commentId) => {
+						fetch(
+							`https://hacker-news.firebaseio.com/v0/item/${commentId}.json`
+						)
+							.then((res) => res.json())
+
+							.then((comment) => {
+								const comments = this.state.comments;
+								comments.push(comment);
+								this.setState({ comments: comments });
+							});
+					});
+				}
 			});
 	}
 	render() {
@@ -31,13 +36,13 @@ class Story extends Component {
 		const story = this.state.story ? (
 			<div>
 				<a href={this.state.story.url}>
-					<h3>{this.state.story.title}</h3>
+					<h4>{this.state.story.title}</h4>
 				</a>
-				<p>by: {this.state.story.by}</p>
+				<h6>by: {this.state.story.by}</h6>
 			</div>
 		) : (
 			<div>
-				<h3>story loading...</h3>
+				<h5>story loading...</h5>
 			</div>
 		);
 

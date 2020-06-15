@@ -28,13 +28,13 @@ class StoryIndex extends Component {
 		const storyIndex = stories.length ? (
 			stories.map((story, index) => {
 				return (
-					<div className="card cyan darken-3" key={story.id}>
-						<div className="card-content white-text">
-							<p>{index + 1}</p>
-							<span className="card-title">
+					<div className="card" key={story.id}>
+						<div className="card-content">
+							<p className="row">{index + 1}</p>
+							<span className="card-title row">
 								<Link to={"/" + story.id}>{story.title}</Link>
 							</span>
-							<p>by: {story.by}</p>
+							<p className="row">by: {story.by}</p>
 						</div>
 					</div>
 				);
