@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import HackerNewsLogo from "../HackerNewsLogo.png";
 
 class StoryIndex extends Component {
 	state = {
@@ -30,10 +31,13 @@ class StoryIndex extends Component {
 				return (
 					<div className="card" key={story.id}>
 						<div className="card-content">
-							<p className="row">{index + 1}</p>
-							<span className="card-title row">
-								<Link to={"/" + story.id}>{story.title}</Link>
-							</span>
+							<img src={HackerNewsLogo} alt="Hacker News Logo" />
+							<Link to={"/" + story.id}>
+								<div className="row numbercircle">
+									<span>{index + 1}</span>
+								</div>
+								<span className="card-title row">{story.title}</span>
+							</Link>
 							<p className="row">by: {story.by}</p>
 						</div>
 					</div>
